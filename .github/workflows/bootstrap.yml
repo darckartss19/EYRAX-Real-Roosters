@@ -18,7 +18,7 @@ jobs:
         run: |
           unzip -o EYRAX-Real-Roosters-0.1.0-source.zip
           rm EYRAX-Real-Roosters-0.1.0-source.zip
-          rm -f .github/workflows/bootstrap.yml
+          rm -f .github/workflows/bootstrap.yml .github/workflows/build.yml
       - name: Commit project source
         run: |
           git config user.name "github-actions[bot]"
