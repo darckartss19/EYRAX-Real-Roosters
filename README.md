@@ -2,10 +2,14 @@
 
 NeoForge 1.21.1 mod that adds realistic heritage roosters, hens and chicks as a separate breeding and combat system. It does not replace the resource-producing chickens from Modern Chickens.
 
-## Version 0.1.0
+## Version 0.2.0
 
 - Eight breeds and six inherited plumage patterns.
 - Separate male, female and chick presentation.
+- Rebuilt articulated model with a dedicated chick mesh.
+- Breed-specific proportions, posture, combs, tails and feathering.
+- Five-feather rooster tails, three-feather hen tails, feet and visible spurs.
+- Brahma shoulders and feathered legs; Silkie crest, fluff and pom tail.
 - Five inherited traits: vitality, agility, power, fertility and temperament.
 - Adult roosters can defend themselves or guard their owner.
 - Hens reproduce and lay ordinary eggs; roosters do not.
