@@ -2,7 +2,7 @@
 
 NeoForge 1.21.1 mod that adds realistic heritage roosters, hens and chicks as a separate breeding and combat system. It does not replace the resource-producing chickens from Modern Chickens.
 
-## Version 0.2.0
+## Version 0.2.1
 
 - Eight breeds and six inherited plumage patterns.
 - Separate male, female and chick presentation.
@@ -14,6 +14,9 @@ NeoForge 1.21.1 mod that adds realistic heritage roosters, hens and chicks as a 
 - Adult roosters can defend themselves or guard their owner.
 - Hens reproduce and lay ordinary eggs; roosters do not.
 - Breed Analyzer and Training Whistle.
+- Natural flocks now share one breed instead of spawning as a random mixed collection.
+- Natural flocks favor hens while retaining adult roosters.
+- The analyzer explains the practical specialty of every breed.
 - Optional compatibility metadata for Modern Chickens, Critter Armory, Apotheosis and EYRAX Apothic Animals.
 
 ## Controls

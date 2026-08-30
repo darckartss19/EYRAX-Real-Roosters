@@ -46,6 +46,6 @@ public final class EyraxRealRoosters {
         modBus.addListener(ModEntities::registerSpawnPlacements);
         container.registerConfig(ModConfig.Type.COMMON, RoostersConfig.SPEC);
 
-        LOGGER.info("EYRAX Real Roosters 0.1.0 is loading");
+        LOGGER.info("EYRAX Real Roosters 0.2.1 is loading");
     }
 }

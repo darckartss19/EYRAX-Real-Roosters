@@ -34,6 +34,11 @@ public enum FowlBreed {
     public double powerScale() { return powerScale; }
     public double fertilityScale() { return fertilityScale; }
 
+    /** Translation suffix used by the analyzer to explain the breed's practical role. */
+    public String specialtyTranslationKey() {
+        return "specialty.eyrax_real_roosters." + serializedName;
+    }
+
     public static FowlBreed byId(int id) {
         return VALUES[Math.floorMod(id, VALUES.length)];
     }

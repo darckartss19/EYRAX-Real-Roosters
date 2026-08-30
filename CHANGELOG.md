@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Natural flocks now spawn as a consistent breed.
+- Natural sex distribution adjusted to 68% hens and 32% roosters.
+- Breed Analyzer now describes each breed's practical specialty.
+- Corrected the startup version reported in the log.
+
 ## 0.2.0
 
 - Rebuilt the heritage chicken model with separate body, breast, saddle and neck volumes.

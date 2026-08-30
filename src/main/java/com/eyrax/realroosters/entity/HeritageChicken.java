@@ -146,10 +146,15 @@ public class HeritageChicken extends TamableAnimal {
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType,
                                         @Nullable SpawnGroupData spawnData) {
-        SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnData);
+        super.finalizeSpawn(level, difficulty, spawnType, spawnData);
         RandomSource random = level.getRandom();
-        setSex(random.nextBoolean() ? FowlSex.ROOSTER : FowlSex.HEN);
-        setBreed(FowlBreed.random(random));
+        HeritageFlockData flock = spawnData instanceof HeritageFlockData existing
+                ? existing
+                : new HeritageFlockData(FowlBreed.random(random));
+
+        // Natural flocks share a breed, while plumage and genetics remain individual.
+        setSex(random.nextFloat() < 0.68F ? FowlSex.HEN : FowlSex.ROOSTER);
+        setBreed(flock.breed());
         setPlumage(PlumagePattern.random(random));
         setVitality(randomTrait(random));
         setAgility(randomTrait(random));
@@ -160,7 +165,7 @@ public class HeritageChicken extends TamableAnimal {
         refreshDerivedAttributes();
         setHealth(getMaxHealth());
         eggTimer = randomEggTimer();
-        return result;
+        return flock;
     }
 
     @Nullable
@@ -400,4 +405,6 @@ public class HeritageChicken extends TamableAnimal {
     public void setPower(int value) { entityData.set(POWER, Mth.clamp(value, 1, 100)); }
     public void setFertility(int value) { entityData.set(FERTILITY, Mth.clamp(value, 1, 100)); }
     public void setTemperament(int value) { entityData.set(TEMPERAMENT, Mth.clamp(value, 1, 100)); }
+
+    private record HeritageFlockData(FowlBreed breed) implements SpawnGroupData {}
 }

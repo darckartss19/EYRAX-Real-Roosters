@@ -35,6 +35,8 @@ public class BreedAnalyzerItem extends Item {
             player.displayClientMessage(Component.translatable("message.eyrax_real_roosters.traits",
                     chicken.getVitality(), chicken.getAgility(), chicken.getPower(),
                     chicken.getFertility(), chicken.getTemperament()), false);
+            player.displayClientMessage(Component.translatable("message.eyrax_real_roosters.specialty",
+                    Component.translatable(chicken.getBreed().specialtyTranslationKey())), false);
             if (chicken.isRooster() && !chicken.isBaby()) {
                 player.displayClientMessage(Component.translatable("message.eyrax_real_roosters.stance",
                         Component.translatable("stance.eyrax_real_roosters." + chicken.getStance().serializedName())), false);
