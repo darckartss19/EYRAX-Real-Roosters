@@ -1,0 +1,28 @@
+name: Import source and start build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand source package
+        run: |
+          unzip -o EYRAX-Real-Roosters-0.1.0-source.zip
+          rm EYRAX-Real-Roosters-0.1.0-source.zip
+          rm -f .github/workflows/bootstrap.yml
+      - name: Commit project source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Import EYRAX Real Roosters 0.1.0 source"
+          git push
