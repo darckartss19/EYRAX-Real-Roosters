@@ -18,6 +18,7 @@ jobs:
       - name: Import source
         run: |
           unzip -o EYRAX-Real-Roosters-0.2.1-source.zip
+          git restore .github/workflows/build.yml
           rm EYRAX-Real-Roosters-0.2.1-source.zip
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
