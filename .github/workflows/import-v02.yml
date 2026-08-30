@@ -1,0 +1,28 @@
+name: Import EYRAX 0.2.0 source
+
+on:
+  push:
+    paths:
+      - "EYRAX-Real-Roosters-0.2.0-source.zip"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: github.actor != "github-actions[bot]"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import source
+        run: |
+          unzip -o EYRAX-Real-Roosters-0.2.0-source.zip
+          rm EYRAX-Real-Roosters-0.2.0-source.zip
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Import EYRAX Real Roosters 0.2.0 source"
+            git push
+          fi
