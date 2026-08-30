@@ -106,14 +106,14 @@ combat traits, egg laying and protective rooster behavior.
 [[dependencies.${mod_id}]]
     modId="eyrax_apothic_animals"
     type="optional"
-    versionRange="[1.1.0,)"
+    versionRange="[0,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="apotheosis"
     type="optional"
-    versionRange="[8.7.0,)"
+    versionRange="[0,)"
     ordering="AFTER"
     side="BOTH"
 
