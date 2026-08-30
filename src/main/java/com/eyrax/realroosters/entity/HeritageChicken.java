@@ -219,7 +219,7 @@ public class HeritageChicken extends TamableAnimal {
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (stack.getItem() instanceof BreedAnalyzerItem analyzer) {
@@ -296,7 +296,7 @@ public class HeritageChicken extends TamableAnimal {
     }
 
     @Override
-    protected float getVoicePitch() {
+    public float getVoicePitch() {
         float base = isRooster() ? 0.72F : 1.08F;
         return isBaby() ? base + 0.35F : base;
     }
