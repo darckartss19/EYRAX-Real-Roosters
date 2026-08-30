@@ -24,6 +24,6 @@ jobs:
         run: ./gradlew build --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: EYRAX-Real-Roosters-0.1.0
+          name: EYRAX-Real-Roosters-0.2.0
           path: build/libs/*.jar
           if-no-files-found: error
