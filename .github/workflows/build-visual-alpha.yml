@@ -3,7 +3,7 @@ name: Build visual alpha source
 on:
   push:
     paths:
-      - "EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-03-v11.zip"
+      - "EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-04-v12.zip"
       - ".github/workflows/build-visual-alpha.yml"
   workflow_dispatch:
 
@@ -29,7 +29,7 @@ jobs:
       - name: Unpack visual source
         run: |
           mkdir visual-src
-          unzip -q EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-03-v11.zip -d visual-src
+          unzip -q EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-04-v12.zip -d visual-src
           test -f visual-src/build.gradle
           test -f visual-src/src/main/resources/assets/eyrax_real_roosters/geo/heritage_chicken.geo.json
 
