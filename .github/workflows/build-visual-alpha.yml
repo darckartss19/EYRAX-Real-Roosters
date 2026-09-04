@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -32,6 +32,9 @@ jobs:
           unzip -q EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-03-v11.zip -d visual-src
           test -f visual-src/build.gradle
           test -f visual-src/src/main/resources/assets/eyrax_real_roosters/geo/heritage_chicken.geo.json
+
+      - name: Install validation dependency
+        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
 
       - name: Validate assets and release structure
         working-directory: visual-src
