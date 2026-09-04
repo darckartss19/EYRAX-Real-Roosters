@@ -47,6 +47,36 @@ jobs:
         working-directory: visual-src
         run: gradle build --stacktrace --no-daemon
 
+      - name: Dedicated server smoke test
+        working-directory: visual-src
+        run: |
+          mkdir -p run
+          printf 'eula=true\n' > run/eula.txt
+          gradle runServer --no-daemon > server-smoke.log 2>&1 &
+          server_pid=$!
+          started=0
+          for attempt in $(seq 1 90); do
+            if grep -q 'Done (' server-smoke.log; then
+              started=1
+              break
+            fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              break
+            fi
+            sleep 2
+          done
+          kill -INT "$server_pid" 2>/dev/null || true
+          wait "$server_pid" || true
+          if [ "$started" -ne 1 ]; then
+            tail -n 250 server-smoke.log
+            exit 1
+          fi
+          if grep -Eqi 'Mod loading has failed|FATAL|Failed to start' server-smoke.log; then
+            tail -n 250 server-smoke.log
+            exit 1
+          fi
+          grep 'Done (' server-smoke.log | tail -1
+
       - name: Inspect JAR separation
         working-directory: visual-src
         run: |
@@ -60,6 +90,12 @@ jobs:
           jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -q 'assets/eyrax_real_roosters/geo/heritage_chicken.geo.json'
           jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -q 'assets/eyrax_real_roosters/animations/heritage_chicken.animation.json'
           jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -q 'META-INF/neoforge.mods.toml'
+          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar META-INF/neoforge.mods.toml | grep -q 'modId="eyrax_fowl_api"'
+          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar META-INF/neoforge.mods.toml | grep -q 'modId="geckolib"'
+          if unzip -Z1 build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -Eq '^assets/examplemod/|^data/minecraft/tags/entity_type/'; then
+            echo "Placeholder resources leaked into the main JAR"
+            exit 1
+          fi
           sha256sum build/libs/eyrax-fowl-api-1.0.0.jar build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar
           unzip -t build/libs/eyrax-fowl-api-1.0.0.jar
           unzip -t build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar
