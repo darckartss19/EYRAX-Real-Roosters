@@ -33,8 +33,8 @@ jobs:
           test -f visual-src/build.gradle
           test -f visual-src/src/main/resources/assets/eyrax_real_roosters/geo/heritage_chicken.geo.json
 
-      - name: Install validation dependency
-        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Install validation dependencies
+        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0 matplotlib==3.10.6
 
       - name: Validate assets and release structure
         working-directory: visual-src
@@ -60,6 +60,9 @@ jobs:
           jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -q 'assets/eyrax_real_roosters/geo/heritage_chicken.geo.json'
           jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -q 'assets/eyrax_real_roosters/animations/heritage_chicken.animation.json'
           jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar | grep -q 'META-INF/neoforge.mods.toml'
+          sha256sum build/libs/eyrax-fowl-api-1.0.0.jar build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar
+          unzip -t build/libs/eyrax-fowl-api-1.0.0.jar
+          unzip -t build/libs/eyrax_real_roosters-0.3.0-alpha.4.jar
           ls -lh build/libs/*.jar
 
       - uses: actions/upload-artifact@v4
