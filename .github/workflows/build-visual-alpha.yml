@@ -3,7 +3,7 @@ name: Build visual alpha source
 on:
   push:
     paths:
-      - "EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-05-v14.zip"
+      - "EYRAX-Real-Roosters-0.3.0-alpha.6-v15-source.zip"
       - ".github/workflows/build-visual-alpha.yml"
   workflow_dispatch:
 
@@ -28,8 +28,9 @@ jobs:
 
       - name: Unpack visual source
         run: |
+          echo '4dd5bb5fc3da6b1375a0cc16d184752e4b59586d9b32cd6e85f97d7109a6b4c0  EYRAX-Real-Roosters-0.3.0-alpha.6-v15-source.zip' | sha256sum --check
           mkdir visual-src
-          unzip -q EYRAX-Real-Roosters-GeckoLib-migration-checkpoint-2026-09-05-v14.zip -d visual-src
+          unzip -q EYRAX-Real-Roosters-0.3.0-alpha.6-v15-source.zip -d visual-src
           test -f visual-src/build.gradle
           test -f visual-src/src/main/resources/assets/eyrax_real_roosters/geo/heritage_chicken.geo.json
 
@@ -42,6 +43,7 @@ jobs:
           python3 tools/validate_gecko_assets.py
           python3 tools/validate_render_budget.py
           python3 tools/validate_release_structure.py
+          python3 tools/validate_visual_polish.py
 
       - name: Build API and mod
         working-directory: visual-src
@@ -83,30 +85,30 @@ jobs:
         working-directory: visual-src
         run: |
           test -f build/libs/eyrax-fowl-api-1.0.0.jar
-          test -f build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar
+          test -f build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar
           jar tf build/libs/eyrax-fowl-api-1.0.0.jar | grep -q '^com/eyrax/fowlapi/'
-          if jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar | grep -q '^com/eyrax/fowlapi/'; then
+          if jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar | grep -q '^com/eyrax/fowlapi/'; then
             echo "Fowl API classes leaked into the main JAR"
             exit 1
           fi
-          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar | grep -q 'assets/eyrax_real_roosters/geo/heritage_chicken.geo.json'
-          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar | grep -q 'assets/eyrax_real_roosters/animations/heritage_chicken.animation.json'
-          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar | grep -q 'META-INF/neoforge.mods.toml'
-          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar META-INF/neoforge.mods.toml | grep -q 'modId="eyrax_fowl_api"'
-          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar META-INF/neoforge.mods.toml | grep -q 'modId="geckolib"'
-          if unzip -Z1 build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar | grep -Eq '^assets/examplemod/|^data/minecraft/tags/entity_type/'; then
+          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar | grep -q 'assets/eyrax_real_roosters/geo/heritage_chicken.geo.json'
+          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar | grep -q 'assets/eyrax_real_roosters/animations/heritage_chicken.animation.json'
+          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar | grep -q 'META-INF/neoforge.mods.toml'
+          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar META-INF/neoforge.mods.toml | grep -q 'modId="eyrax_fowl_api"'
+          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar META-INF/neoforge.mods.toml | grep -q 'modId="geckolib"'
+          if unzip -Z1 build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar | grep -Eq '^assets/examplemod/|^data/minecraft/tags/entity_type/'; then
             echo "Placeholder resources leaked into the main JAR"
             exit 1
           fi
-          sha256sum build/libs/eyrax-fowl-api-1.0.0.jar build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar
+          sha256sum build/libs/eyrax-fowl-api-1.0.0.jar build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar
           unzip -t build/libs/eyrax-fowl-api-1.0.0.jar
-          unzip -t build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar
+          unzip -t build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar
           ls -lh build/libs/*.jar
 
       - uses: actions/upload-artifact@v4
         with:
-          name: EYRAX-Real-Roosters-0.3.0-alpha.5-build
+          name: EYRAX-Real-Roosters-0.3.0-alpha.6-build
           path: |
             visual-src/build/libs/eyrax-fowl-api-1.0.0.jar
-            visual-src/build/libs/eyrax_real_roosters-0.3.0-alpha.5.jar
+            visual-src/build/libs/eyrax_real_roosters-0.3.0-alpha.6.jar
           if-no-files-found: error
