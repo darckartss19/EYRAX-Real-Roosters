@@ -29,7 +29,7 @@ jobs:
 
       - name: Unpack visual source
         run: |
-          echo 'bebed4dedb1c47e3047d559f34770f816bcd931eaf0e26b5906f208704154bf4  EYRAX-Real-Roosters-0.3.0-alpha.8-v17-source.zip' | sha256sum --check
+          echo 'ccd316705fb15e4d1b368bd869b726a528318272bc874c94adcf70b70406dda5  EYRAX-Real-Roosters-0.3.0-alpha.8-v17-source.zip' | sha256sum --check
           mkdir visual-src
           unzip -q EYRAX-Real-Roosters-0.3.0-alpha.8-v17-source.zip -d visual-src
           test -f visual-src/build.gradle
