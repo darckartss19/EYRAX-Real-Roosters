@@ -106,7 +106,7 @@ jobs:
           menuBackgroundBlurriness:5
           tutorialStep:none
           OPTIONS
-          if ! xvfb-run -a -s "-screen 0 1280x960x24" timeout 240s gradle runClient -Peyrax.visualQa=true --no-daemon > client-visual-qa.log 2>&1; then
+          if ! xvfb-run -a -s "-screen 0 1280x960x24" timeout 240s gradle runClient -Peyrax.visualQa=true --no-configuration-cache --no-daemon > client-visual-qa.log 2>&1; then
             tail -n 250 client-visual-qa.log
             exit 1
           fi
