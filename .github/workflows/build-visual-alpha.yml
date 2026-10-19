@@ -3,7 +3,7 @@ name: Build combat alpha source
 on:
   push:
     paths:
-      - "EYRAX-Real-Roosters-0.3.0-alpha.8-v17-source.zip"
+      - "EYRAX-Real-Roosters-0.3.0-alpha.9-v18-source.zip"
       - ".github/workflows/build-visual-alpha.yml"
   workflow_dispatch:
 
@@ -29,9 +29,9 @@ jobs:
 
       - name: Unpack visual source
         run: |
-          echo 'e76b75e1b17dcabd6cdc973e02bf2fd2e565c74af57833a3ca8030fc436ec57d  EYRAX-Real-Roosters-0.3.0-alpha.8-v17-source.zip' | sha256sum --check
+          echo 'df34c4ac78bdb152245998dc70b49d11009d7fbb500bd877b80d8f0ee33898a6  EYRAX-Real-Roosters-0.3.0-alpha.9-v18-source.zip' | sha256sum --check
           mkdir visual-src
-          unzip -q EYRAX-Real-Roosters-0.3.0-alpha.8-v17-source.zip -d visual-src
+          unzip -q EYRAX-Real-Roosters-0.3.0-alpha.9-v18-source.zip -d visual-src
           test -f visual-src/build.gradle
           test -f visual-src/src/main/resources/assets/eyrax_real_roosters/geo/heritage_chicken.geo.json
 
@@ -59,7 +59,7 @@ jobs:
             tail -n 250 combat-gametests.log
             exit 1
           fi
-          grep -Ei 'All 12 required tests passed|12 tests done|12 GAME TESTS COMPLETE' combat-gametests.log
+          grep -Ei 'All 13 required tests passed|13 tests done|13 GAME TESTS COMPLETE' combat-gametests.log
 
       - name: Dedicated server smoke test
         working-directory: visual-src
@@ -132,34 +132,34 @@ jobs:
         working-directory: visual-src
         run: |
           test -f build/libs/eyrax-fowl-api-1.0.0.jar
-          test -f build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar
+          test -f build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar
           jar tf build/libs/eyrax-fowl-api-1.0.0.jar | grep -q '^com/eyrax/fowlapi/'
-          if jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar | grep -q '^com/eyrax/fowlapi/'; then
+          if jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar | grep -q '^com/eyrax/fowlapi/'; then
             echo "Fowl API classes leaked into the main JAR"
             exit 1
           fi
-          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar | grep -q 'assets/eyrax_real_roosters/geo/heritage_chicken.geo.json'
-          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar | grep -q 'assets/eyrax_real_roosters/animations/heritage_chicken.animation.json'
-          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar | grep -q 'META-INF/neoforge.mods.toml'
-          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar META-INF/neoforge.mods.toml | grep -q 'modId="eyrax_fowl_api"'
-          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar META-INF/neoforge.mods.toml | grep -q 'modId="geckolib"'
-          if unzip -Z1 build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar | grep -Eq '^assets/examplemod/|^data/minecraft/tags/entity_type/'; then
+          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar | grep -q 'assets/eyrax_real_roosters/geo/heritage_chicken.geo.json'
+          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar | grep -q 'assets/eyrax_real_roosters/animations/heritage_chicken.animation.json'
+          jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar | grep -q 'META-INF/neoforge.mods.toml'
+          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar META-INF/neoforge.mods.toml | grep -q 'modId="eyrax_fowl_api"'
+          unzip -p build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar META-INF/neoforge.mods.toml | grep -q 'modId="geckolib"'
+          if unzip -Z1 build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar | grep -Eq '^assets/examplemod/|^data/minecraft/tags/entity_type/'; then
             echo "Placeholder resources leaked into the main JAR"
             exit 1
           fi
-          if jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar | grep -Eq '^com/eyrax/(visualqa|combatqa)/|BlurredBaselineScreen'; then
+          if jar tf build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar | grep -Eq '^com/eyrax/(visualqa|combatqa)/|BlurredBaselineScreen'; then
             echo "Development-only QA classes leaked into the main JAR"
             exit 1
           fi
-          sha256sum build/libs/eyrax-fowl-api-1.0.0.jar build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar
+          sha256sum build/libs/eyrax-fowl-api-1.0.0.jar build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar
           unzip -t build/libs/eyrax-fowl-api-1.0.0.jar
-          unzip -t build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar
+          unzip -t build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar
           ls -lh build/libs/*.jar
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: EYRAX-Real-Roosters-0.3.0-alpha.8-visual-qa
+          name: EYRAX-Real-Roosters-0.3.0-alpha.9-visual-qa
           path: |
             visual-src/run/visual-qa/
             visual-src/combat-gametests.log
@@ -169,8 +169,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: EYRAX-Real-Roosters-0.3.0-alpha.8-build
+          name: EYRAX-Real-Roosters-0.3.0-alpha.9-build
           path: |
             visual-src/build/libs/eyrax-fowl-api-1.0.0.jar
-            visual-src/build/libs/eyrax_real_roosters-0.3.0-alpha.8.jar
+            visual-src/build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar
           if-no-files-found: error

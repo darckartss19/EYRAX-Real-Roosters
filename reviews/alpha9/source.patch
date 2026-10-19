@@ -1,0 +1,374 @@
+--- alpha8/.github/workflows/build.yml
++++ alpha9/.github/workflows/build.yml
+@@ -34,6 +34,6 @@
+         run: gradle build --stacktrace
+       - uses: actions/upload-artifact@v4
+         with:
+-          name: EYRAX-Real-Roosters-0.3.0-alpha.7
++          name: EYRAX-Real-Roosters-0.3.0-alpha.9
+           path: build/libs/*.jar
+           if-no-files-found: error
+
+--- alpha8/CHANGELOG.md
++++ alpha9/CHANGELOG.md
+@@ -1,4 +1,20 @@
+ # Changelog
++
++## 0.3.0-alpha.9 — technical corrections
++
++- Clear pending whistle challenges in their original dimension when cancelled.
++- Add a cross-dimension cancellation GameTest (13 combat tests total).
++- Restore the missing official Gradle 9.2.1 wrapper JAR.
++- Update source documentation; retain all alpha.8 visual assets unchanged.
++
++## 0.3.0-alpha.8 — combat checkpoint v17
++
++- Base for alpha.9: delayed combat impacts, combat poses and owner-approved duels.
++
++## 0.3.0-alpha.7 — analyzer checkpoint v16
++
++- Draw the analyzer panel after the world blur, before widgets.
++
+ 
+ ## 0.3.0-alpha.6 — visual polish (checkpoint v15)
+ 
+
+--- alpha8/CHECKPOINT_STATUS.md
++++ alpha9/CHECKPOINT_STATUS.md
+@@ -1,25 +1,37 @@
+-# EYRAX Real Roosters — checkpoint v16 / 0.3.0-alpha.7
++# alpha.9 / checkpoint v18
+ 
+-Base: compiled v15 / alpha.6, commit 0c8753db6379d5fde44cb5e8b26668274ea74f17.
+-The user approved the feet in v15 after testing in Minecraft.
++Base: alpha.8 v17 source ZIP, branch eyrax/alpha8-combat-v17,
++commit c2f561b9ac36e1a34d45bb63b1183e2de23de9dd.
+ 
+-Confirmed issue: Minecraft 1.21.1 Screen.render calls renderBackground.
+-Drawing the panel before calling super.render blurred its text and bars,
+-while the Close button was drawn after the second background pass.
++## Corrections
+ 
+-Fix: draw the panel inside renderBackground, after the vanilla world blur.
+-Screen.render performs the one background pass and renders its widgets;
+-the analyzer render override only delegates and adds the name tooltip.
++Pending whistle challenges are cancelled in their saved dimension, including
++when the initiating player has moved elsewhere. Lookup only uses loaded
++entities and preserves the initiator UUID check. Invalid or unavailable
++dimensions are ignored safely; no chunks are force-loaded.
+ 
+-All v15 geometry, textures, animations, entity code and API are preserved.
+-43 bones / 152 cubes / 4 animations / 29 physical 128x128 textures.
+-Visible maxima: rooster 69/70; hen 62/65; chick 27/30.
++The missing Gradle wrapper JAR is restored from Gradle v9.2.1 and checked
++against the official SHA256:
++423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9.
++Documentation, version and QA dependency ranges now refer to alpha.9.
+ 
+-Client verification is opt-in through tools/client_visual_qa.gradle and a
+-separate visualQa mod/source set. It uses a disposable Minecraft world,
+-checks real background pass counts, and captures the v15 baseline and v16
+-at normal/compact GUI scales with scrolling. QA classes are not packaged.
++## Verification on Windows, 2026-10-18
+ 
+-The source checkpoint precedes its CI run. Compilation, client screenshots
+-and server startup results are recorded in the resulting build artifacts.
+-Compatibility with the user's complete modpack still requires an in-game test.
++- Regression reproduced before the fix: 12 combat tests passed, the new
++  cross-dimension cancellation test failed with a surviving challenge.
++- After the fix: all 13 required Minecraft server GameTests passed.
++- Static validators passed: Gecko assets, render budgets, release structure,
++  and all 12 visual-polish regression tests.
++- Java 21 / Gradle 9.2.1 build passed; final package inspection recorded with
++  the delivery artifacts.
++- All 33 geometry/animation/texture assets match alpha.8 byte-for-byte.
++
++Local server tests skipped the client asset download and used a local
++build/moddev asset reference to the existing cache. This is server-only
++verification; it does not validate a rendered client. CI retains the full
++asset download, server smoke test and client visual harness.
++
++Not performed here: interactive client rendering, real two-client portal
++travel, full modpack compatibility, production installation or release.
++OpenCode advisor inference remained unavailable (free-tier access rejected);
++no independent OpenCode review is claimed.
+--- alpha8/INSTALLATION.txt
++++ alpha9/INSTALLATION.txt
+@@ -1,34 +1,26 @@
+-EYRAX REAL ROOSTERS 0.3.0-alpha.7 — PAQUETE DE PRUEBA
++EYRAX REAL ROOSTERS 0.3.0-alpha.9 — PAQUETE DE PRUEBA
+ 
+-Requisitos (cliente y servidor):
+-- Minecraft Java 1.21.1 y Java 21.
+-- NeoForge 21.1.248 dentro de la rama 21.1.x.
+-- GeckoLib 4.9.2 para NeoForge / Minecraft 1.21.1.
+-- eyrax-fowl-api-1.0.0.jar.
+-- eyrax_real_roosters-0.3.0-alpha.7.jar.
++Minecraft Java 1.21.1, Java 21, NeoForge 21.1.248.
++Dependencias en cliente y servidor: EYRAX Fowl API 1.0.0 y GeckoLib
++4.9.2 o version 4.x compatible para NeoForge / Minecraft 1.21.1.
+ 
+-Este ZIP es CODIGO FUENTE, no se coloca en la carpeta mods.
+-Los dos JAR EYRAX se generan con Java 21 y Gradle 9.2.1 (gradle build).
+-GeckoLib es una dependencia adicional: no esta incluida dentro de los JAR EYRAX.
++Este ZIP contiene CODIGO FUENTE; no se instala en mods.
++Compilar con gradlew.bat build (Windows) o ./gradlew build (Linux).
++El wrapper oficial 9.2.1 esta incluido. Los JAR salen en build/libs.
+ 
+-Para probar los JAR compilados:
+-1. Haz una copia de seguridad y utiliza primero una copia del mundo.
+-2. Sustituye solamente el JAR anterior de Real Roosters; no dejes dos versiones.
+-3. Conserva Fowl API y GeckoLib compatibles. No borres los datos del mundo.
+-4. Usa el analizador con clic derecho sobre el ave. Esc o Cerrar sale de la ficha.
+-   La rueda y RePag/AvPag permiten recorrer la ficha en resoluciones pequenas.
++Cambios respecto a alpha.8: cancelar un desafio con el silbato desde otra
++dimension tambien elimina la peticion en la dimension de origen.
++El aspecto, las seis animaciones y las texturas de alpha.8 se conservan.
+ 
+-Esta version corrige el desenfoque del analizador respecto a alpha.6.
+-Las patas aprobadas, los modelos, las texturas y las animaciones de v15
+-se conservan sin cambios.
+-No cambia identificadores de entidad, genes, atributos, comida ni reproduccion.
+-Las etiquetas de nombre personalizadas se conservan.
++Para probar, utiliza una copia del mundo y sustituye solo el JAR anterior
++de Real Roosters por eyrax_real_roosters-0.3.0-alpha.9.jar. Conserva Fowl API
++y GeckoLib compatibles, sin duplicar versiones del mod.
+ 
+-Pruebas manuales pendientes:
+-- Ocho razas, gallos/gallinas/pollitos; ojos, pico, crestas y patas desde ambos lados.
+-- Caminar -> ataque -> caminar y ataque en servidor con dos clientes.
+-- Analizador ES/EN; sexo de pollitos; nombres largos; escala GUI y salida con Esc.
+-- Guardar/cargar y comprobar que crezcan sin perder nombre/raza/datos.
+-- Compatibilidad con Jade, Critter Armory y el modpack actual.
++Controles: clic con analizador abre la ficha; Esc/Cerrar sale. Rueda y
++RePag/AvPag recorren fichas pequenas. Silbato en gallo adulto cambia postura.
++Agachado + silbato selecciona un gallo propio y luego un rival; el dueno del
++rival debe aceptar si es otro jugador. Agachado + silbato al aire cancela.
+ 
+-No instalar en produccion antes de comprobar compilacion y pruebas de juego.
++Comprobaciones manuales pendientes: servidor con dos clientes, cambio real
++de dimension y cancelacion, ocho razas/sexos/edades, guardar/cargar, analizador
++ES/EN y compatibilidad con el modpack completo. Ver CHECKPOINT_STATUS.md.
+--- alpha8/README.md
++++ alpha9/README.md
+@@ -1,82 +1,53 @@
+-# EYRAX Real Roosters — 0.3.0-alpha.7
++# EYRAX Real Roosters — 0.3.0-alpha.9
+ 
+-Analyzer rendering checkpoint v16, based on the compiled visual-polish v15.
+-Minecraft 1.21.1 · NeoForge 21.1.248 · Java 21 · Gradle 9.2.1.
++Technical corrections based on alpha.8 / combat checkpoint v17.
++Minecraft 1.21.1, NeoForge 21.1.248, Java 21, Gradle 9.2.1.
+ 
+-## Dependencies and build
++## Changes
+ 
+-Both clients and the dedicated server need EYRAX Fowl API 1.0.0 and GeckoLib
+-4.9.2 (NeoForge / 1.21.1), plus the Real Roosters JAR.
++- Cancelling a pending whistle challenge after changing dimension clears the
++  request on the rival in the original dimension. Only the initiating player
++  can clear that request. No chunks are loaded for this lookup.
++- Includes the official Gradle 9.2.1 wrapper JAR, missing from the alpha.8
++  source archive, so the included launchers can run.
++- Corrects source-package documentation and artifact version labels.
+ 
+-Run `gradle build` with Java 21 and Gradle 9.2.1. Outputs:
+-- `build/libs/eyrax-fowl-api-1.0.0.jar`
+-- `build/libs/eyrax_real_roosters-0.3.0-alpha.7.jar`
++Geometry, animations and textures are preserved byte-for-byte from alpha.8:
++43 bones, 152 cubes, six animations, 24 breed/sex/age textures, five overlays
++and two item textures. Entity IDs, genetics and Fowl API remain unchanged.
+ 
+-The API is a separate source set/JAR, never shaded into the main mod.
++## Build
+ 
+-## Analyzer rendering fix
++Install Java 21, then run `./gradlew build` (Windows: `gradlew.bat build`).
++Outputs are `build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar` and the separate
++`build/libs/eyrax-fowl-api-1.0.0.jar`. Both client and server also need GeckoLib
++4.9.2 or a compatible 4.x version for NeoForge / Minecraft 1.21.1.
+ 
+-Minecraft 1.21.1 `Screen.render` invokes `renderBackground` before widgets.
+-The v15 analyzer drew its content first, then called that inherited render,
+-which blurred the content a second time. The panel is now drawn in the
+-background override, after the world blur and before the widgets. Tooltips
+-remain above the widgets.
++## Verification
+ 
+-The opt-in client visual QA source set compares the original v15 screen with
+-the fixed screen, checks actual background event counts, and captures normal
+-and compact/scrolled layouts. It is excluded from shipped JARs.
+-
+-The user approved the v15 feet. All geometry, textures, animations, entity
+-behavior and genetics are byte-for-byte unchanged from v15.
+-
+-## Visual features retained from v15
+-
+-- Independent eye meshes with iris/pupil UVs, no painted eyes on the beak.
+-- Refined beak, symmetric thicker shanks and shorter front/rear toes.
+-- Preserved upright orientation and head-attached combs/crests.
+-- Separate 0.48-second visual attack controller, alongside locomotion.
+-- Dynamic breed/sex/age names, preserving names set by players.
+-- Bilingual read-only analyzer: breed, biological sex, life stage, plumage,
+-  five genetic scores (1–100), breed specialty and applicable combat stance.
+-- Analyzer wraps long descriptions, scrolls at small GUI resolutions, supports
+-  narration, a close button and Esc. Data is a snapshot taken at opening.
+-
+-Preserved: eight breeds, six plumages, API, entity IDs, genes, attributes,
+-combat goals/damage, food and reproduction. No new gameplay systems.
+-
+-## Checks and regeneration
++Install Pillow 11.3.0 and matplotlib 3.10.6 for the Python checks:
+ 
+ ```sh
+-python3 tools/validate_gecko_assets.py
+-python3 tools/validate_model_uv.py
+-python3 tools/validate_render_budget.py
+-python3 tools/validate_release_structure.py
+-python3 tools/validate_visual_polish.py
++python tools/validate_gecko_assets.py
++python tools/validate_render_budget.py
++python tools/validate_release_structure.py
++python tools/validate_visual_polish.py
++./gradlew runGameTestServer -Peyrax.combatQa=true --no-configuration-cache
+ ```
+ 
+-The 12 static regression tests include hashes of v14 gameplay files and methods.
+-Counts: 43 bones, 152 cubes, four animations, 29 physical 128x128 textures.
+-Per-visible-entity limits: rooster 69/70, hen 62/65, chick 27/30.
++GameTests use a disposable development world and a separate QA source set;
++QA classes are excluded from distributed JARs. The suite has 13 combat tests,
++including cancellation after a dimension change. The optional client visual
++harness remains available with `-Peyrax.visualQa=true`.
+ 
+-To regenerate this pass deterministically:
+-```sh
+-python3 tools/polish_visual_assets.py
+-python3 tools/generate_textures.py
+-```
++Do not rerun historical asset generation/migration scripts to build this
++release: the checked-in alpha.8 resources are the intended appearance.
++See CHECKPOINT_STATUS.md for actual validation results and remaining checks.
+ 
+-These scripts operate on the corrected Y-up geometry. Do not rerun the legacy
+-orientation flip on an already converted model. Historical migration scripts
+-are retained for reference, not as the alpha.6 regeneration pipeline.
++## Controls
+ 
+-`render_static_breed_preview.py` makes structural QA views using median texture
+-colors; it does not replicate Minecraft rendering or certify animations.
+-
+-## Controls and verification
+-
+-Seeds retain their existing taming/breeding behavior. Right-click an animal
+-with the analyzer to open its record. Use the whistle on adult roosters for
+-Passive/Defend/Guard Owner. Sneak + empty hand orders a tamed bird to sit.
+-
+-See INSTALLATION.txt for the manual ES/EN, GUI-scale, multiplayer and update
+-checklist. Compiling, dedicated-server startup, and actual client visual
+-approval are separate gates. This source checkpoint is not a certified release.
++Use seeds to tame/breed. Right-click an animal with the analyzer for its record.
++Use the whistle on adult roosters to change Passive/Defend/Guard Owner.
++Sneak + whistle selects your rooster, then a rival; a rival owned by another
++player needs that owner's acceptance. Sneak + whistle in the air cancels a
++pending selection/request. Sneak + empty hand orders a tamed bird to sit.
+--- alpha8/gradle.properties
++++ alpha9/gradle.properties
+@@ -34,7 +34,7 @@
+ # The license of the mod. Review your options at https://choosealicense.com/. All Rights Reserved is the default.
+ mod_license=MIT
+ # The mod version. See https://semver.org/
+-mod_version=0.3.0-alpha.8
++mod_version=0.3.0-alpha.9
+ fowl_api_version=1.0.0
+ geckolib_version=4.9.2
+ # The group ID for the mod. It is only important when publishing as an artifact to a Maven repository.
+
+Added binary: gradle/wrapper/gradle-wrapper.jar SHA256 423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9
+--- alpha8/src/main/java/com/eyrax/realroosters/item/TrainingWhistleItem.java
++++ alpha9/src/main/java/com/eyrax/realroosters/item/TrainingWhistleItem.java
+@@ -8,8 +8,11 @@
+ import java.util.Objects;
+ import javax.annotation.Nullable;
+ import net.minecraft.ChatFormatting;
++import net.minecraft.core.registries.Registries;
+ import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.network.chat.Component;
++import net.minecraft.resources.ResourceKey;
++import net.minecraft.resources.ResourceLocation;
+ import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.world.InteractionHand;
+ import net.minecraft.world.InteractionResult;
+@@ -152,11 +155,15 @@
+ 
+     private static void cancelSelection(Player player) {
+         CompoundTag data = player.getPersistentData().getCompound(SELECTION);
+-        if (data.hasUUID("Rival") && player.level() instanceof ServerLevel level
+-                && data.getString("Dimension").equals(level.dimension().location().toString())
+-                && level.getEntity(data.getUUID("Rival")) instanceof HeritageChicken rival) {
+-            RoosterCombat.Challenge pending = rival.getCombat().challenge();
+-            if (pending != null && pending.initiator().equals(player.getUUID())) rival.getCombat().clearChallenge();
++        if (data.hasUUID("Rival") && player.level() instanceof ServerLevel currentLevel) {
++            ResourceLocation dimension = ResourceLocation.tryParse(data.getString("Dimension"));
++            ServerLevel selectionLevel = dimension == null ? null : currentLevel.getServer()
++                    .getLevel(ResourceKey.create(Registries.DIMENSION, dimension));
++            if (selectionLevel != null
++                    && selectionLevel.getEntity(data.getUUID("Rival")) instanceof HeritageChicken rival) {
++                RoosterCombat.Challenge pending = rival.getCombat().challenge();
++                if (pending != null && pending.initiator().equals(player.getUUID())) rival.getCombat().clearChallenge();
++            }
+         }
+         player.getPersistentData().remove(SELECTION);
+     }
+
+--- alpha8/tools/client-visual-qa/resources/META-INF/neoforge.mods.toml
++++ alpha9/tools/client-visual-qa/resources/META-INF/neoforge.mods.toml
+@@ -11,6 +11,6 @@
+ [[dependencies.eyrax_visual_qa]]
+ modId="eyrax_real_roosters"
+ type="required"
+-versionRange="[0.3.0-alpha.8,0.3.0-alpha.9)"
++versionRange="[0.3.0-alpha.9,0.3.0-alpha.10)"
+ ordering="AFTER"
+ side="CLIENT"
+
+--- alpha8/tools/combat-qa/java/com/eyrax/combatqa/CombatGameTests.java
++++ alpha9/tools/combat-qa/java/com/eyrax/combatqa/CombatGameTests.java
+@@ -186,6 +186,25 @@
+         h.assertTrue(b.getCombat().challenge() == null, "Air cancellation left a challenge");
+         whistle.command(bob, b);
+         h.assertTrue(!a.getCombat().isInDuel() && !b.getCombat().isInDuel(), "Cancelled challenge still started");
++        h.succeed();
++    }
++
++    @GameTest(template = "combat", timeoutTicks = 40)
++    public static void cancellationAfterDimensionChangeClearsRequest(GameTestHelper h) {
++        Player alice = owner(h), bob = owner(h);
++        HeritageChicken a = bird(h, 4, alice), b = bird(h, 6, bob);
++        TrainingWhistleItem whistle = whistle();
++        whistle.command(alice, a); whistle.command(alice, b);
++        h.assertTrue(b.getCombat().challenge() != null, "Fixture requires a pending challenge");
++        var otherLevel = h.getLevel().getServer().getLevel(net.minecraft.world.level.Level.NETHER);
++        h.assertTrue(otherLevel != null && otherLevel != h.getLevel(), "Fixture requires another dimension");
++        var relocated = FakePlayerFactory.get(otherLevel, alice.getGameProfile());
++        relocated.getPersistentData().merge(alice.getPersistentData().copy());
++        relocated.setShiftKeyDown(true);
++        whistle.use(otherLevel, relocated, InteractionHand.MAIN_HAND);
++        h.assertTrue(b.getCombat().challenge() == null, "Dimension change left a cancelled challenge active");
++        whistle.command(bob, b);
++        h.assertTrue(!a.getCombat().isInDuel() && !b.getCombat().isInDuel(), "Cancelled request started a duel");
+         h.succeed();
+     }
+ 
+
+--- alpha8/tools/combat-qa/resources/META-INF/neoforge.mods.toml
++++ alpha9/tools/combat-qa/resources/META-INF/neoforge.mods.toml
+@@ -11,6 +11,6 @@
+ [[dependencies.eyrax_combat_qa]]
+ modId="eyrax_real_roosters"
+ type="required"
+-versionRange="[0.3.0-alpha.8,0.3.0-alpha.9)"
++versionRange="[0.3.0-alpha.9,0.3.0-alpha.10)"
+ ordering="AFTER"
+ side="BOTH"
+
