@@ -1,8 +1,8 @@
 # EYRAX Real Roosters
 
-> Current correction source on this branch: [alpha.9 v18 ZIP](EYRAX-Real-Roosters-0.3.0-alpha.9-v18-source.zip).
-> Extract it to build alpha.9. The root Java project remains the historical 0.2.1 source.
-> See [alpha.9 changes and verification](reviews/alpha9/README.md).
+> Current correction source on this branch: [alpha.10 v19 ZIP](EYRAX-Real-Roosters-0.3.0-alpha.10-v19-source.zip).
+> Extract it to build alpha.10. The root Java project remains the historical 0.2.1 source.
+> See [alpha.10 changes and verification](reviews/alpha10/README.md).
 
 NeoForge 1.21.1 mod that adds realistic heritage roosters, hens and chicks as a separate breeding and combat system. It does not replace the resource-producing chickens from Modern Chickens.
 

@@ -1,0 +1,328 @@
+--- alpha9/.github/workflows/build.yml
++++ alpha10/.github/workflows/build.yml
+@@ -34,6 +34,6 @@
+         run: gradle build --stacktrace
+       - uses: actions/upload-artifact@v4
+         with:
+-          name: EYRAX-Real-Roosters-0.3.0-alpha.9
++          name: EYRAX-Real-Roosters-0.3.0-alpha.10
+           path: build/libs/*.jar
+           if-no-files-found: error
+
+--- alpha9/CHANGELOG.md
++++ alpha10/CHANGELOG.md
+@@ -1,4 +1,12 @@
+ # Changelog
++
++## 0.3.0-alpha.10 — pending challenge corrections
++
++- Discard pending requests when the challenger disappears or bird ownership changes.
++- Log the real loaded mod version rather than alpha.4.
++- Two regressions reproduce blocked requests before the fix; all 15 GameTests pass after it.
++- Preserve all alpha.8 visual assets and alpha.9 fixes.
++
+ 
+ ## 0.3.0-alpha.9 — technical corrections
+ 
+
+--- alpha9/CHECKPOINT_STATUS.md
++++ alpha10/CHECKPOINT_STATUS.md
+@@ -1,37 +1,23 @@
+-# alpha.9 / checkpoint v18
++# alpha.10 / checkpoint v19 — 2026-10-22
+ 
+-Base: alpha.8 v17 source ZIP, branch eyrax/alpha8-combat-v17,
+-commit c2f561b9ac36e1a34d45bb63b1183e2de23de9dd.
++Base: alpha.9 v18 source, merged into eyrax/alpha8-combat-v17 at fdc40e5.
++Scope: release invalid pending challenges and correct startup version logging.
++No geometry, animation, texture, genetics, IDs, API or dependency changes.
+ 
+-## Corrections
++Local verification on Windows / Java21 / Gradle9.2.1:
++- RED: removed/transferred challenger cases fail; 13 existing GameTests pass.
++- GREEN: all 15 required GameTests pass after the correction.
++- Normal build, asset validator, render budget and release structure pass.
++- All 12 static visual/noncombat checks pass. Historical registration hash
++  comparison normalizes only the intentional startup-log change.
++- Runtime log now reports 0.3.0-alpha.10 from mod metadata.
++- Visual assets are compared to alpha.9 during packaging and JAR inspection.
+ 
+-Pending whistle challenges are cancelled in their saved dimension, including
+-when the initiating player has moved elsewhere. Lookup only uses loaded
+-entities and preserves the initiator UUID check. Invalid or unavailable
+-dimensions are ignored safely; no chunks are force-loaded.
++Server-only local tests skip client asset downloads using the existing cache
++reference. CI retains full downloads, dedicated server and client visual QA.
++CI results are tracked in the PR, separate from this source checkpoint.
++Full-modpack multiplayer/manual testing remains pending. No live instance
++installation or merge is performed by this change.
+ 
+-The missing Gradle wrapper JAR is restored from Gradle v9.2.1 and checked
+-against the official SHA256:
+-423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9.
+-Documentation, version and QA dependency ranges now refer to alpha.9.
+-
+-## Verification on Windows, 2026-10-18
+-
+-- Regression reproduced before the fix: 12 combat tests passed, the new
+-  cross-dimension cancellation test failed with a surviving challenge.
+-- After the fix: all 13 required Minecraft server GameTests passed.
+-- Static validators passed: Gecko assets, render budgets, release structure,
+-  and all 12 visual-polish regression tests.
+-- Java 21 / Gradle 9.2.1 build passed; final package inspection recorded with
+-  the delivery artifacts.
+-- All 33 geometry/animation/texture assets match alpha.8 byte-for-byte.
+-
+-Local server tests skipped the client asset download and used a local
+-build/moddev asset reference to the existing cache. This is server-only
+-verification; it does not validate a rendered client. CI retains the full
+-asset download, server smoke test and client visual harness.
+-
+-Not performed here: interactive client rendering, real two-client portal
+-travel, full modpack compatibility, production installation or release.
+-OpenCode advisor inference remained unavailable (free-tier access rejected);
+-no independent OpenCode review is claimed.+OpenCode remains recorded as blocked by its free-tier provider. No new
++inference or independent OpenCode review is claimed.
+--- alpha9/INSTALLATION.txt
++++ alpha10/INSTALLATION.txt
+@@ -1,26 +1,16 @@
+-EYRAX REAL ROOSTERS 0.3.0-alpha.9 — PAQUETE DE PRUEBA
++EYRAX REAL ROOSTERS 0.3.0-alpha.10 — PRUEBA
+ 
+-Minecraft Java 1.21.1, Java 21, NeoForge 21.1.248.
+-Dependencias en cliente y servidor: EYRAX Fowl API 1.0.0 y GeckoLib
+-4.9.2 o version 4.x compatible para NeoForge / Minecraft 1.21.1.
++Minecraft 1.21.1, Java 21, NeoForge 21.1.248, Fowl API 1.0.0 y GeckoLib
++4.x compatible con NeoForge 1.21.1 (compilado con 4.9.2).
+ 
+-Este ZIP contiene CODIGO FUENTE; no se instala en mods.
+-Compilar con gradlew.bat build (Windows) o ./gradlew build (Linux).
+-El wrapper oficial 9.2.1 esta incluido. Los JAR salen en build/libs.
++Mejoras: las peticiones invalidas por desaparicion o cambio de propietario
++ya no bloquean desafios nuevos. El registro muestra la version real cargada.
++Conserva aspecto, recursos y controles de alpha.8 y correcciones de alpha.9.
+ 
+-Cambios respecto a alpha.8: cancelar un desafio con el silbato desde otra
+-dimension tambien elimina la peticion en la dimension de origen.
+-El aspecto, las seis animaciones y las texturas de alpha.8 se conservan.
++Compila con gradlew.bat build o ./gradlew build. El ZIP contiene fuente y no
++va en mods. Para probar, usa una copia de tu instancia/mundo y sustituye solo
++el JAR anterior de Real Roosters por eyrax_real_roosters-0.3.0-alpha.10.jar.
++Conserva las dependencias compatibles y no dejes dos versiones del mod juntas.
+ 
+-Para probar, utiliza una copia del mundo y sustituye solo el JAR anterior
+-de Real Roosters por eyrax_real_roosters-0.3.0-alpha.9.jar. Conserva Fowl API
+-y GeckoLib compatibles, sin duplicar versiones del mod.
+-
+-Controles: clic con analizador abre la ficha; Esc/Cerrar sale. Rueda y
+-RePag/AvPag recorren fichas pequenas. Silbato en gallo adulto cambia postura.
+-Agachado + silbato selecciona un gallo propio y luego un rival; el dueno del
+-rival debe aceptar si es otro jugador. Agachado + silbato al aire cancela.
+-
+-Comprobaciones manuales pendientes: servidor con dos clientes, cambio real
+-de dimension y cancelacion, ocho razas/sexos/edades, guardar/cargar, analizador
+-ES/EN y compatibilidad con el modpack completo. Ver CHECKPOINT_STATUS.md.+Pendiente: prueba manual de multijugador y compatibilidad con el pack completo.
++Consulta CHECKPOINT_STATUS.md para los resultados de pruebas automatizadas.
+--- alpha9/README.md
++++ alpha10/README.md
+@@ -1,31 +1,24 @@
+-# EYRAX Real Roosters — 0.3.0-alpha.9
++# EYRAX Real Roosters — 0.3.0-alpha.10
+ 
+-Technical corrections based on alpha.8 / combat checkpoint v17.
+-Minecraft 1.21.1, NeoForge 21.1.248, Java 21, Gradle 9.2.1.
++Minecraft 1.21.1 / NeoForge 21.1.248 / Java 21 / Gradle 9.2.1.
++Based on alpha.9, with all 33 alpha.8 visual resources preserved byte-for-byte.
+ 
+-## Changes
++## Improvements
+ 
+-- Cancelling a pending whistle challenge after changing dimension clears the
+-  request on the rival in the original dimension. Only the initiating player
+-  can clear that request. No chunks are loaded for this lookup.
+-- Includes the official Gradle 9.2.1 wrapper JAR, missing from the alpha.8
+-  source archive, so the included launchers can run.
+-- Corrects source-package documentation and artifact version labels.
++- Pending challenges no longer block a new request when their challenger is
++  gone or ownership of either rooster has changed. Valid requests retain
++  the existing owner-acceptance flow and expiration time.
++- Startup logs use the actual mod metadata version instead of a fixed alpha.4.
++- Retains alpha.9 cancellation across dimensions and its Gradle wrapper fix.
+ 
+-Geometry, animations and textures are preserved byte-for-byte from alpha.8:
+-43 bones, 152 cubes, six animations, 24 breed/sex/age textures, five overlays
+-and two item textures. Entity IDs, genetics and Fowl API remain unchanged.
++## Build and tests
+ 
+-## Build
++Run `./gradlew build`, or `gradlew.bat build` on Windows. Outputs in build/libs:
++`eyrax_real_roosters-0.3.0-alpha.10.jar` and `eyrax-fowl-api-1.0.0.jar`.
++Both clients and servers require Fowl API 1.0.0 and compatible NeoForge
++GeckoLib 4.x (build baseline 4.9.2).
+ 
+-Install Java 21, then run `./gradlew build` (Windows: `gradlew.bat build`).
+-Outputs are `build/libs/eyrax_real_roosters-0.3.0-alpha.9.jar` and the separate
+-`build/libs/eyrax-fowl-api-1.0.0.jar`. Both client and server also need GeckoLib
+-4.9.2 or a compatible 4.x version for NeoForge / Minecraft 1.21.1.
+-
+-## Verification
+-
+-Install Pillow 11.3.0 and matplotlib 3.10.6 for the Python checks:
++Python checks require Pillow 11.3.0 and matplotlib 3.10.6:
+ 
+ ```sh
+ python tools/validate_gecko_assets.py
+@@ -35,19 +28,13 @@
+ ./gradlew runGameTestServer -Peyrax.combatQa=true --no-configuration-cache
+ ```
+ 
+-GameTests use a disposable development world and a separate QA source set;
+-QA classes are excluded from distributed JARs. The suite has 13 combat tests,
+-including cancellation after a dimension change. The optional client visual
+-harness remains available with `-Peyrax.visualQa=true`.
+-
+-Do not rerun historical asset generation/migration scripts to build this
+-release: the checked-in alpha.8 resources are the intended appearance.
+-See CHECKPOINT_STATUS.md for actual validation results and remaining checks.
++15 server GameTests cover combat and pending requests. QA source sets are
++excluded from the shipped mod. See CHECKPOINT_STATUS.md for validation scope.
++Historical asset generators are not part of the build; use the bundled assets.
+ 
+ ## Controls
+ 
+-Use seeds to tame/breed. Right-click an animal with the analyzer for its record.
+-Use the whistle on adult roosters to change Passive/Defend/Guard Owner.
+-Sneak + whistle selects your rooster, then a rival; a rival owned by another
+-player needs that owner's acceptance. Sneak + whistle in the air cancels a
+-pending selection/request. Sneak + empty hand orders a tamed bird to sit.+Seeds tame/breed. The analyzer opens the animal record. The whistle changes
++adult rooster stance; sneak + whistle selects a rooster and rival, or accepts
++an incoming challenge. Sneak + whistle in air cancels an outgoing request.
++Sneak + empty hand toggles sitting for an owned bird.
+--- alpha9/gradle.properties
++++ alpha10/gradle.properties
+@@ -34,7 +34,7 @@
+ # The license of the mod. Review your options at https://choosealicense.com/. All Rights Reserved is the default.
+ mod_license=MIT
+ # The mod version. See https://semver.org/
+-mod_version=0.3.0-alpha.9
++mod_version=0.3.0-alpha.10
+ fowl_api_version=1.0.0
+ geckolib_version=4.9.2
+ # The group ID for the mod. It is only important when publishing as an artifact to a Maven repository.
+
+--- alpha9/src/main/java/com/eyrax/realroosters/EyraxRealRoosters.java
++++ alpha10/src/main/java/com/eyrax/realroosters/EyraxRealRoosters.java
+@@ -53,6 +53,6 @@
+         modBus.addListener(ModEntities::registerSpawnPlacements);
+         container.registerConfig(ModConfig.Type.COMMON, RoostersConfig.SPEC);
+ 
+-        LOGGER.info("EYRAX Real Roosters 0.3.0-alpha.4 is loading");
++        LOGGER.info("EYRAX Real Roosters {} is loading", container.getModInfo().getVersion());
+     }
+ }
+
+--- alpha9/src/main/java/com/eyrax/realroosters/entity/RoosterCombat.java
++++ alpha10/src/main/java/com/eyrax/realroosters/entity/RoosterCombat.java
+@@ -127,7 +127,14 @@
+     }
+ 
+     @Nullable public Challenge challenge() {
+-        if (challenge != null && now() > challenge.expiresAt()) challenge = null;
++        if (challenge != null && (now() > challenge.expiresAt()
++                || !(bird.level() instanceof ServerLevel level)
++                || !(level.getEntity(challenge.challenger()) instanceof HeritageChicken challenger)
++                || !bird.isAlive() || !challenger.isAlive()
++                || !Objects.equals(challenge.challengerOwner(), challenger.getOwnerUUID())
++                || !Objects.equals(challenge.recipientOwner(), bird.getOwnerUUID()))) {
++            challenge = null;
++        }
+         return challenge;
+     }
+ 
+
+--- alpha9/tools/client-visual-qa/resources/META-INF/neoforge.mods.toml
++++ alpha10/tools/client-visual-qa/resources/META-INF/neoforge.mods.toml
+@@ -11,6 +11,6 @@
+ [[dependencies.eyrax_visual_qa]]
+ modId="eyrax_real_roosters"
+ type="required"
+-versionRange="[0.3.0-alpha.9,0.3.0-alpha.10)"
++versionRange="[0.3.0-alpha.10,0.3.0-alpha.11)"
+ ordering="AFTER"
+ side="CLIENT"
+
+--- alpha9/tools/combat-qa/java/com/eyrax/combatqa/CombatGameTests.java
++++ alpha10/tools/combat-qa/java/com/eyrax/combatqa/CombatGameTests.java
+@@ -219,6 +219,42 @@
+         whistle.command(bob, b);
+         h.assertTrue(!a.getCombat().isInDuel() && !b.getCombat().isInDuel(), "Old owner authorized a transferred bird");
+         h.assertTrue(b.getCombat().challenge() == null, "Invalid request remained active");
++        h.succeed();
++    }
++
++    @GameTest(template = "combat", timeoutTicks = 40)
++    public static void removedChallengerDoesNotBlockNewRequest(GameTestHelper h) {
++        Player alice = owner(h), bob = owner(h), charlie = owner(h);
++        HeritageChicken a = bird(h, 4, alice), b = bird(h, 6, bob), c = bird(h, 8, charlie);
++        whistle().command(alice, a); whistle().command(alice, b);
++        h.assertTrue(b.getCombat().challenge() != null, "Fixture requires a pending challenge");
++        a.discard();
++        whistle().command(charlie, c); whistle().command(charlie, b);
++        var pending = b.getCombat().challenge();
++        h.assertTrue(pending != null && pending.challenger().equals(c.getUUID()),
++                "Removed challenger blocked the new request");
++        whistle().command(bob, b);
++        h.assertTrue(c.getCombat().opponent() == b && b.getCombat().opponent() == c,
++                "Replacement challenge could not be accepted");
++        c.getCombat().stopDuel();
++        h.succeed();
++    }
++
++    @GameTest(template = "combat", timeoutTicks = 40)
++    public static void transferredChallengerDoesNotBlockNewRequest(GameTestHelper h) {
++        Player alice = owner(h), bob = owner(h), charlie = owner(h);
++        HeritageChicken a = bird(h, 4, alice), b = bird(h, 6, bob), c = bird(h, 8, charlie);
++        whistle().command(alice, a); whistle().command(alice, b);
++        h.assertTrue(b.getCombat().challenge() != null, "Fixture requires a pending challenge");
++        a.tame(charlie);
++        whistle().command(charlie, c); whistle().command(charlie, b);
++        var pending = b.getCombat().challenge();
++        h.assertTrue(pending != null && pending.challenger().equals(c.getUUID()),
++                "Transferred challenger blocked the new request");
++        whistle().command(bob, b);
++        h.assertTrue(c.getCombat().opponent() == b && b.getCombat().opponent() == c,
++                "Replacement challenge could not be accepted");
++        c.getCombat().stopDuel();
+         h.succeed();
+     }
+ 
+
+--- alpha9/tools/combat-qa/resources/META-INF/neoforge.mods.toml
++++ alpha10/tools/combat-qa/resources/META-INF/neoforge.mods.toml
+@@ -11,6 +11,6 @@
+ [[dependencies.eyrax_combat_qa]]
+ modId="eyrax_real_roosters"
+ type="required"
+-versionRange="[0.3.0-alpha.9,0.3.0-alpha.10)"
++versionRange="[0.3.0-alpha.10,0.3.0-alpha.11)"
+ ordering="AFTER"
+ side="BOTH"
+
+--- alpha9/tools/validate_visual_polish.py
++++ alpha10/tools/validate_visual_polish.py
+@@ -154,7 +154,13 @@
+         for path, sha in contract['files'].items():
+             if path in combat_files:
+                 continue
+-            self.assertEqual(sha, hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), path)
++            data = (ROOT / path).read_bytes()
++            if path == 'src/main/java/com/eyrax/realroosters/EyraxRealRoosters.java':
++                # Alpha.10 changes only the startup version message; still pin all registrations.
++                data = data.replace(
++                    b'LOGGER.info("EYRAX Real Roosters {} is loading", container.getModInfo().getVersion());',
++                    b'LOGGER.info("EYRAX Real Roosters 0.3.0-alpha.4 is loading");')
++            self.assertEqual(sha, hashlib.sha256(data).hexdigest(), path)
+         candidate = methods(self.entity)
+         for name, sha in contract['methods'].items():
+             if name in combat_methods:
+
